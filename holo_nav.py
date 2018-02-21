@@ -25,11 +25,15 @@ class MyFrontEnd(FrontEnd):
         self.robot.lin_vel = 0
         self.robot.ang_vel = 0
         
+        # bool check if robot is at goal
+        self.goalReached = True
+
     def mouseup(self,x,y,button):
         """ Gets mouse location on click prints goal passes to robot class """
         
         print('mouse clicked at %d, %d'%(x,y)) 
         self.robot.set_map_goal(x,y)
+        self.goalReached = False
         
     
     def draw(self,surface):
@@ -48,7 +52,27 @@ class MyFrontEnd(FrontEnd):
         else:
             # read rangefinder
             self.robot.sonar_distance = self.sparki.dist
-    
+        
+        """ Holonomic Navigation
+            If 1 < Y or Y < -1 then turn
+            elseif x > 0 then move forward
+            else goal reached stop motors
+        """
+        if not self.goalReached:
+            if self.robot.goalYr > 1.:
+                self.robot.ang_vel = .3
+                self.robot.lin_vel = 0
+            elif self.robot.goalYr < -1.:
+                self.robot.ang_vel = -.3
+                self.robot.lin_vel = 0
+            elif self.robot.goalXr > 0.:
+                self.robot.ang_vel = 0
+                self.robot.lin_vel = 10
+            else:
+                self.goalReached = True
+                self.robot.ang_vel = 0
+                self.robot.lin_vel = 0
+
         # calculate motor settings
         left_speed, left_dir, right_speed, right_dir = self.robot.compute_motors()
         
@@ -57,6 +81,9 @@ class MyFrontEnd(FrontEnd):
         
         # update robot position
         self.robot.update(time_delta)
+
+        #update goal position
+        self.robot.set_robot_goal()
 
 def main():
     # parse arguments
