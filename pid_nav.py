@@ -25,8 +25,17 @@ class MyFrontEnd(FrontEnd):
         self.robot.lin_vel = 0
         self.robot.ang_vel = 0
         
+        #is robot at goal
+        self.goalReached = True
+
+        #PID control constants
+        self.K_linear = 1
+        self.K_angular = 1
+        self.distanceThreshold = 1
+
     def mouseup(self,x,y,button):
-        pass
+        self.robot.set_map_goal(x,y)
+        self.goalReached = False
 
     def draw(self,surface):
         # draw occupancy map
@@ -44,15 +53,35 @@ class MyFrontEnd(FrontEnd):
         else:
             # read rangefinder
             self.robot.sonar_distance = self.sparki.dist
-    
+        
+        """
+        PID navigation
+        Calculate angle to goal set linear and angular vel
+        """
+
+        if not self.goalReached:
+            if self.robot.goalXr > self.distanceThreshold or self.robot.goalXr < -self.distanceThreshold:
+                theta = math.atan2(self.robot.goalYr,self.robot.goalXr)
+                self.robot.lin_vel = self.K_linear * self.robot.goalXr
+                self.robot.ang_vel = self.K_angular * theta
+            else:
+                self.robot.ang_vel = 0
+                self.robot.lin_vel = 0
+                self.goalReached = True
+
+
+            
         # calculate motor settings
         left_speed, left_dir, right_speed, right_dir = self.robot.compute_motors()
         
         # send command
-        self.sparki.send_command(left_speed,left_dir,right_speed,right_dir)
+        #self.sparki.send_command(left_speed,left_dir,right_speed,right_dir)
         
         # update robot position
         self.robot.update(time_delta)
+
+        # update robot goal
+        self.robot.set_robot_goal()
 
 def main():
     # parse arguments
