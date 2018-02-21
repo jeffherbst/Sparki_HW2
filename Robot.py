@@ -32,6 +32,28 @@ class Robot:
         self.sonar_angle = 0 # rad -- 0 angle = sonar pointed along x-axis of robot
         self.sonar_distance = 10 # cm -- most recent distance reported by sonar
 
+        #goal position in map frames
+        self.goalXm = 0
+        self.goalYm = 0
+
+    def set_map_goal(self,x,y):
+        """ Sets the robot goal 
+            Args: 
+                x = goal in map frame
+                y = goal in map frame 
+         """
+        self.goalXm = x
+        self.goalYm = y
+        print('Map Goal %d,%d'%(self.goalXm,self.goalYm))
+        
+
+    def get_robot_goal(self):
+        """ Gets the goal in robot frame
+            Returns:
+                Goal in robot frame in vector form x,y
+        """ 
+        return mul(self.get_map_robot_transform(),vec(self.goalXm,self.goalYm))
+
     def get_robot_map_transform(self):
         """ Get transformation that takes points from robot frame to map frame """
         return transform(self.x,self.y,self.theta)

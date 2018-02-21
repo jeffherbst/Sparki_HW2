@@ -1,10 +1,10 @@
 #include <Sparki.h>
 
 // USB communication
-//#define MySerial Serial
+#define MySerial Serial
 
 // Bluetooth communication
-#define MySerial Serial1
+//#define MySerial Serial1
 
 #define DEBUG_MESSAGES
 
