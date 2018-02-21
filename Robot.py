@@ -36,8 +36,13 @@ class Robot:
         self.goalXm = 0
         self.goalYm = 0
 
+        #goal position in robot frame
+        self.goalXr = 0
+        self.goalYr = 0
+
+
     def set_map_goal(self,x,y):
-        """ Sets the robot goal 
+        """ Sets the robot goal and sets robot goal as well 
             Args: 
                 x = goal in map frame
                 y = goal in map frame 
@@ -45,14 +50,16 @@ class Robot:
         self.goalXm = x
         self.goalYm = y
         print('Map Goal %d,%d'%(self.goalXm,self.goalYm))
+        self.set_robot_goal()
         
 
-    def get_robot_goal(self):
-        """ Gets the goal in robot frame
-            Returns:
-                Goal in robot frame in vector form x,y
-        """ 
-        return mul(self.get_map_robot_transform(),vec(self.goalXm,self.goalYm))
+    def set_robot_goal(self):
+        """ Sets the goal in robot frame """ 
+        T_map_robot = self.get_map_robot_transform()
+        store = mul(T_map_robot,vec(self.goalXm,self.goalYm))
+        self.goalXr = store[0]
+        self.goalYr = store[1]
+        print('Robot Goal (%d,%d)'%(self.goalXr,self.goalYr))
 
     def get_robot_map_transform(self):
         """ Get transformation that takes points from robot frame to map frame """

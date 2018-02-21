@@ -30,7 +30,6 @@ class MyFrontEnd(FrontEnd):
         
         print('mouse clicked at %d, %d'%(x,y)) 
         self.robot.set_map_goal(x,y)
-        self.robot.get_robot_goal()
         
     
     def draw(self,surface):
