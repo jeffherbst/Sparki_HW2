@@ -32,7 +32,7 @@ class MyFrontEnd(FrontEnd):
         self.K_linear = .5
         self.K_angular = .5
         self.distanceThreshold = 1
-        self.switchToBugDist = 20
+        self.switchToBugDist = 30
 
     def mouseup(self,x,y,button):
         self.robot.set_map_goal(x,y)
@@ -55,6 +55,7 @@ class MyFrontEnd(FrontEnd):
             # read rangefinder
             self.robot.sonar_distance = self.sparki.dist
         
+        print('Sonar Distance (%d)'%(self.robot.sonar_distance))
 
         """
         PID navigation
@@ -64,7 +65,7 @@ class MyFrontEnd(FrontEnd):
         """
 
         if not self.goalReached:
-            if self.switchToBugDist < self.robot.sonar_distance : #bug if too close
+            if self.switchToBugDist > self.robot.sonar_distance and not self.robot.sonar_distance == 0: #bug if too close
                 self.robot.ang_vel = .3
                 self.robot.lin_vel = 0
             elif self.robot.goalXr > self.distanceThreshold or self.robot.goalXr < -self.distanceThreshold or self.robot.goalYr > self.distanceThreshold or self.robot.goalYr < -self.distanceThreshold:

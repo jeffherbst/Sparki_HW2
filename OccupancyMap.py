@@ -62,7 +62,7 @@ class OccupancyMap:
             if pointM[0] < self.width and pointM[0] > 0 and pointM[1] < self.height and pointM[1] > 0:  #if point is in map
                 if self.grid[int(pointM[0]),int(pointM[1])] == 1:   #check if it is ocupied
                     return counter                                  #return first occupied
-                counter += 1.
+                counter += 5.
             else:
                 return 0                                            #return 0 if nothing found
 
