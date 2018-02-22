@@ -39,6 +39,9 @@ class OccupancyMap:
             self.grid = np.zeros((height,width),dtype='float32')
         else:
             raise ValueError('must provide path or width + height')
+
+        self.maxDistance = int(math.sqrt(self.width * self.width + self.height * self.height))
+ 
     
     def draw(self,surface):
         """ Draws the occupancy map onto the surface. """
@@ -53,8 +56,16 @@ class OccupancyMap:
             Returns:
                 First-hit distance or zero if no hit.
         """
-        # complete this function
-        return 0.
+        counter = 1.
+        while counter < self.maxDistance:
+            pointM = mul(T_sonar_map,vec(counter,0))
+            if pointM[0] < self.width and pointM[0] > 0 and pointM[1] < self.height and pointM[1] > 0:  #if point is in map
+                if self.grid[int(pointM[0]),int(pointM[1])] == 1:   #check if it is ocupied
+                    return counter                                  #return first occupied
+                counter += 1.
+            else:
+                return 0                                            #return 0 if nothing found
+
     
 if __name__ == '__main__':
     # create a map
