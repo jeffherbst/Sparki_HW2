@@ -45,6 +45,7 @@ class MyFrontEnd(FrontEnd):
         self.robot.draw(surface)
     
     def update(self,time_delta):
+        """
         # get sonar distance
         if self.sparki.port == '':
             # simulate rangefinder
@@ -53,14 +54,14 @@ class MyFrontEnd(FrontEnd):
         else:
             # read rangefinder
             self.robot.sonar_distance = self.sparki.dist
-        
+        """
         """
         PID navigation
         Calculate angle to goal set linear and angular vel
         """
 
         if not self.goalReached:
-            if self.robot.goalXr > self.distanceThreshold or self.robot.goalXr < -self.distanceThreshold:
+            if self.robot.goalXr > self.distanceThreshold or self.robot.goalXr < -self.distanceThreshold or self.robot.goalYr > self.distanceThreshold or self.robot.goalYr < -self.distanceThreshold:
                 theta = math.atan2(self.robot.goalYr,self.robot.goalXr)
                 self.robot.lin_vel = self.K_linear * self.robot.goalXr
                 self.robot.ang_vel = self.K_angular * theta
